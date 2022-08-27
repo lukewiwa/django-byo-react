@@ -1,0 +1,38 @@
+{
+	"name": "Python 3",
+	"build": {
+		"dockerfile": "Dockerfile",
+		"context": ".."
+	},
+	"runArgs": [
+		"--env-file=.env"
+	],
+	"containerEnv": {
+		"MYPY_CACHE": "/tmp/.mypy_cache"
+	},
+	// Set *default* container specific settings.json values on container create.
+	"settings": {
+		"python.defaultInterpreterPath": "/usr/local/bin/python",
+		"python.linting.enabled": true,
+		"python.formatting.provider": "black",
+		"editor.formatOnSave": true,
+		"python.languageServer": "Pylance",
+		"python.linting.flake8Enabled": true,
+		"python.linting.lintOnSave": true,
+		"python.analysis.typeCheckingMode": "basic"
+	},
+	// Add the IDs of extensions you want installed when the container is created.
+	"extensions": [
+		"ms-python.python",
+		"ms-python.vscode-pylance",
+		"visualstudioexptteam.vscodeintellicode",
+		"bungcip.better-toml",
+		"redhat.vscode-yaml",
+		"ms-python.isort",
+		"eamodio.gitlens",
+		"streetsidesoftware.code-spell-checker",
+		"ms-python.black-formatter",
+		"batisteo.vscode-django"
+	],
+	"postCreateCommand": "poetry install"
+}
