@@ -1,0 +1,19 @@
+name: tests
+on: push
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container:
+      image: lukewiwa/pythons:36-37-38-39-310
+    steps:
+      - uses: actions/checkout@v2
+      - name: install sqlite3
+        run: apt-get update && apt-get install --no-install-recommends -y sqlite3
+      - name: default python install
+        run: ln -sf /usr/local/bin/python3.7 /usr/local/bin/python && ln -sf /usr/local/bin/pip3.7 /usr/local/bin/pip
+      - name: install poetry
+        run: python -m pip install poetry && poetry install
+      - name: tox
+        if: ${{ success() }}
+        run: poetry run tox
