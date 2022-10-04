@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-byo-react"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["lukewiwa <luke.wiwa@gmail.com>"]
 description = "A template tag to create a div and json script tag for react to bind to"
 readme = "README.md"
@@ -40,3 +40,19 @@ profile = 'black'
 
 [tool.pyright]
 typeCheckingMode = "basic"
+
+[tool.black]
+target-version = ['py37']
+include = '\.pyi?$'
+exclude = '''
+(
+  /(
+      \.eggs         # exclude a few common directories in the
+    | \.git          # root of the project
+    | \.mypy_cache
+    | \.pytest_cache
+    | \.tox
+    | \.venv
+  )/
+)
+'''
