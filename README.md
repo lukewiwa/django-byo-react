@@ -35,17 +35,13 @@ import ReactDOM from 'react-dom/client';
 const App: FC = (props) => <div {...props}></div>
 
 const elementId = "react-element-id"
-const scriptId = `${elementId}-props`
 
 const container = document.getElementById(elementId)
 if (!container) throw new Error(`Can't find element with id ${elementId}`);
 
 // Extract props from the django json_script tag
-const jsonContent = document.getElementById(scriptId)?.textContent;
-if (!jsonContent)
-  throw new Error(
-    `No parsable json content found in element with id ${scriptId}`
-  );
+const jsonContent = document.getElementById(container.dataset?.scriptId)?.textContent;
+if (!jsonContent) throw new Error("No associated script found");
 
 // props will be a dictionary containing the tag kwargs
 // eg: The props constant will be an object with { showActive: true }
