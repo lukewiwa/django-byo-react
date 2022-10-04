@@ -1,10 +1,11 @@
 [tool.poetry]
 name = "django-byo-react"
-version = "0.2.0"
-authors = ["lukewiwa <luke.wiwa@gmail.com>"]
+version = "0.2.1"
 description = "A template tag to create a div and json script tag for react to bind to"
-readme = "README.md"
+authors = ["lukewiwa <luke.wiwa@gmail.com>"]
 license = "MIT"
+readme = "README.md"
+packages = [{include = "django_byo_react"}]
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
@@ -18,21 +19,18 @@ Django = [
     { version = "^3.2", python = "^3.7"},
     { version = "^4.1", python = "^3.11"},
 ]
-poetry-core = ">=1.0.0"
-black = "^22.6.0"
-flake8 = "^5.0.4"
 
-[tool.poetry.dev-dependencies]
-tox = "^3.25.1"
+
+[tool.poetry.group.dev.dependencies]
+tox = "^3.26.0"
 flake8 = "^5.0.4"
-isort = "^5.10.1"
-black = "^22.6.0"
-tox-poetry-dev-dependencies = "^0.0.9"
-pyright = "^1.1.268"
+black = "^22.8.0"
+pyright = "^1.1.273"
 django-types = "^0.16.0"
+isort = "^5.10.1"
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.isort]
