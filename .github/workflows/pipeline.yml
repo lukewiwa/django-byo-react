@@ -6,6 +6,8 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: lukewiwa/pythons:36-37-38-39-310
+    env:
+      POETRY_VIRTUALENVS_IN_PROJECT: true
     steps:
       - uses: actions/checkout@v2
       - name: install sqlite3
