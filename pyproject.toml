@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-byo-react"
-version = "0.2.2"
+version = "0.2.3"
 description = "A template tag to create a div and json script tag for react to bind to"
 authors = ["lukewiwa <luke.wiwa@gmail.com>"]
 license = "MIT"
@@ -15,7 +15,7 @@ homepage = "https://github.com/lukewiwa/django-byo-react"
 
 [tool.poetry.dependencies]
 python = "^3.7"
-Django = "^3.2"
+Django = ">=3.2"
 
 [tool.poetry.group.dev.dependencies]
 tox = "^3.26.0"
