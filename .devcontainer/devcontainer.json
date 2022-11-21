@@ -34,5 +34,11 @@
 		"ms-python.black-formatter",
 		"batisteo.vscode-django"
 	],
-	"postCreateCommand": "poetry install"
+	"postCreateCommand": "poetry install",
+	"features": {
+		"ghcr.io/devcontainers/features/common-utils:1": {},
+		"ghcr.io/devcontainers/features/git:1": {},
+		"ghcr.io/dhoeric/features/hadolint:1": {},
+		"ghcr.io/guiyomh/features/vim:0": {}
+	}
 }
