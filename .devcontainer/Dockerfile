@@ -7,4 +7,4 @@ RUN ln -sf /usr/local/bin/pip3.7 /usr/local/bin/pip
 ENV POETRY_VIRTUALENVS_IN_PROJECT="true"
 RUN python -m pip install poetry
 
-RUN apt update && apt install -y sqlite3 vim ssh-client
+RUN apt update && apt install -y sqlite3 ssh-client
