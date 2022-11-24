@@ -1,4 +1,4 @@
-from uuid import uuid4
+import uuid
 
 from django import template
 
@@ -6,8 +6,10 @@ register = template.Library()
 
 
 @register.inclusion_tag("django_byo_react/includes/byo_react.html")
-def byo_react(id=uuid4(), component_name=None, className="", **kwargs):
-    script_id = uuid4()
+def byo_react(id=None, component_name=None, className="", **kwargs):
+    if id is None:
+        id = uuid.uuid4()
+    script_id = uuid.uuid4()
     return {
         "component_name": component_name,
         "element_id": id,
