@@ -19,11 +19,10 @@ Django = ">=3.2"
 
 [tool.poetry.group.dev.dependencies]
 tox = "^3.26.0"
-flake8 = "^5.0.4"
 black = "^22.8.0"
 pyright = "^1.1.273"
 django-types = "^0.16.0"
-isort = "^5.10.1"
+ruff = "^0.0.211"
 
 [build-system]
 requires = ["poetry-core"]
