@@ -12,35 +12,38 @@
 		"RUFF_CACHE_DIR": "/tmp/.ruff_cache"
 	},
 	// Set *default* container specific settings.json values on container create.
-	"settings": {
-		"python.defaultInterpreterPath": ".venv/bin/python",
-		"python.linting.enabled": true,
-		"editor.formatOnSave": true,
-		"python.analysis.typeCheckingMode": "basic",
-		"python.formatting.provider": "black",
-		"[python]": {
-			"editor.formatOnSave": true,
-			"editor.codeActionsOnSave": {
-				"source.fixAll": true,
-				"source.organizeImports": true
-			}
-		},
-		"ruff.path": [
-			"${containerWorkspaceFolder}/.venv/bin/ruff"
-		]
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"python.defaultInterpreterPath": ".venv/bin/python",
+				"python.linting.enabled": true,
+				"editor.formatOnSave": true,
+				"python.analysis.typeCheckingMode": "basic",
+				"python.formatting.provider": "black",
+				"[python]": {
+					"editor.formatOnSave": true,
+					"editor.codeActionsOnSave": {
+						"source.fixAll": true,
+						"source.organizeImports": true
+					}
+				},
+				"ruff.path": [
+					"${containerWorkspaceFolder}/.venv/bin/ruff"
+				]
+			},
+			"extensions": [
+				"ms-python.vscode-pylance",
+				"visualstudioexptteam.vscodeintellicode",
+				"tamasfe.even-better-toml",
+				"redhat.vscode-yaml",
+				"eamodio.gitlens",
+				"streetsidesoftware.code-spell-checker",
+				"ms-python.black-formatter",
+				"batisteo.vscode-django",
+				"charliermarsh.ruff"
+			]
+		}
 	},
-	// Add the IDs of extensions you want installed when the container is created.
-	"extensions": [
-		"ms-python.vscode-pylance",
-		"visualstudioexptteam.vscodeintellicode",
-		"bungcip.better-toml",
-		"redhat.vscode-yaml",
-		"eamodio.gitlens",
-		"streetsidesoftware.code-spell-checker",
-		"ms-python.black-formatter",
-		"batisteo.vscode-django",
-		"charliermarsh.ruff"
-	],
 	"postCreateCommand": "poetry install",
 	"features": {
 		"ghcr.io/devcontainers/features/common-utils:1": {},
