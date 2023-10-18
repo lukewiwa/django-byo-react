@@ -34,7 +34,7 @@ import ReactDOM from 'react-dom/client';
 // Example root component for a react app
 const App: FC = (props) => <div {...props}></div>
 
-const elementId = "react-element-id"
+const elementId = "react-app-id"
 
 const container = document.getElementById(elementId)
 if (!container) throw new Error(`Can't find element with id ${elementId}`);

@@ -1,31 +1,31 @@
 [tool.poetry]
 name = "django-byo-react"
-version = "0.2.3"
+version = "0.3.0"
 description = "A template tag to create a div and json script tag for react to bind to"
 authors = ["lukewiwa <luke.wiwa@gmail.com>"]
 license = "MIT"
 readme = "README.md"
-packages = [{include = "django_byo_react"}]
+packages = [{ include = "django_byo_react" }]
 classifiers = [
-    "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
 ]
 homepage = "https://github.com/lukewiwa/django-byo-react"
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.8"
 Django = ">=3.2"
 
 [tool.poetry.group.dev.dependencies]
-tox = "^3.26.0"
-black = "^22.8.0"
-pyright = "^1.1.273"
-django-types = "^0.16.0"
-ruff = "^0.0.211"
+tox = "^4.11.3"
+black = "^23.10.0"
+pyright = "^1.1.332"
+django-types = "^0.19.1"
+ruff = "^0.1.0"
 
 [build-system]
-requires = ["poetry-core"]
+requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.isort]
@@ -35,7 +35,7 @@ profile = 'black'
 typeCheckingMode = "basic"
 
 [tool.black]
-target-version = ['py37']
+target-version = ['py38']
 include = '\.pyi?$'
 exclude = '''
 (
