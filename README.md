@@ -18,7 +18,7 @@ In the template that you want to install a react app load the tag and use it wit
 ```django
 {% load byo_react %}
 
-"{% byo_react id='react-app-id' className='w-100' showActive=True %}"
+{% byo_react id='react-app-id' className='w-100' showActive=True %}
 ```
 
 ### Javascript/Typescript Example
