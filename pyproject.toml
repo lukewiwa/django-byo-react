@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-byo-react"
-version = "0.3.0"
+version = "0.3.1"
 description = "A template tag to create a div and json script tag for react to bind to"
 authors = ["lukewiwa <luke.wiwa@gmail.com>"]
 license = "MIT"
