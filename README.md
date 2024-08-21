@@ -45,7 +45,7 @@ Here is a typical example for a very basic app using the div element id `react-a
 
 ```typescript
 import React, { FC } from "react";
-import ReactDOM from 'react-dom/client';
+import ReactDOM from "react-dom/client";
 
 // Example root component for a react app
 const App: FC = (props) => <div {...props}></div>
@@ -90,7 +90,7 @@ This will render with the following HTML:
 
 ```typescript
 import React, { FC } from "react";
-import ReactDOM from 'react-dom/client';
+import ReactDOM from "react-dom/client";
 
 // Example root component for a react app
 const App: FC = (props) => <div {...props}></div>

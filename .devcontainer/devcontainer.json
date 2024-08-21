@@ -19,12 +19,12 @@
 				"python.linting.enabled": true,
 				"editor.formatOnSave": true,
 				"python.analysis.typeCheckingMode": "basic",
-				"python.formatting.provider": "black",
+				"python.formatting.provider": "ruff",
 				"[python]": {
 					"editor.formatOnSave": true,
 					"editor.codeActionsOnSave": {
-						"source.fixAll": true,
-						"source.organizeImports": true
+						"source.fixAll": "explicit",
+						"source.organizeImports": "explicit"
 					}
 				},
 				"ruff.path": [
@@ -44,7 +44,6 @@
 			]
 		}
 	},
-	"postCreateCommand": "poetry install",
 	"features": {
 		"ghcr.io/devcontainers/features/common-utils:1": {},
 		"ghcr.io/devcontainers/features/git:1": {},
