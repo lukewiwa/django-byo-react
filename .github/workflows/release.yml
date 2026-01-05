@@ -10,23 +10,7 @@ permissions:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
-    container: lukewiwa/pythons:36-37-38-39-310-311-312
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Install sqlite3
-        run: apt-get update && apt-get install -y sqlite3
-
-      - name: Set default python
-        run: echo "/root/.local/share/uv/python/cpython-3.9.20-linux-x86_64-gnu/bin" >> $GITHUB_PATH
-
-      - name: Install UV
-        uses: astral-sh/setup-uv@v4
-
-      - name: Run tests
-        run: make test
+    uses: ./.github/workflows/test.yml
 
   build:
     needs: test
