@@ -13,7 +13,7 @@ jobs:
       - name: default python install
         run: ln -sf /usr/local/bin/python3.9 /usr/local/bin/python && ln -sf /usr/local/bin/pip3.9 /usr/local/bin/pip
       - name: install uv
-        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+        uses: astral-sh/setup-uv@v4
       - name: Run tests
         if: ${{ success() }}
         run: make test
