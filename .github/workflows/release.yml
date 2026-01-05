@@ -1,0 +1,66 @@
+name: Publish to PyPI
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container: lukewiwa/pythons:36-37-38-39-310-311-312
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install sqlite3
+        run: apt-get update && apt-get install -y sqlite3
+
+      - name: Set default python
+        run: echo "/root/.local/share/uv/python/cpython-3.9.20-linux-x86_64-gnu/bin" >> $GITHUB_PATH
+
+      - name: Install UV
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+
+      - name: Run tests
+        run: make test
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install UV
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+
+      - name: Build package
+        run: uvx --from build pyproject-build --installer uv
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write  # Required for trusted publishing
+    environment:
+      name: pypi
+      url: https://pypi.org/p/django-byo-react
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
