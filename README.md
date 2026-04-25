@@ -67,6 +67,22 @@ const root = ReactDOM.createRoot(container)
 root.render(<App {...props} />);
 ```
 
+If you'd rather not write that wiring on every project, there's a companion
+npm package — [`django-byo-react`](./js) — that does the parsing (with
+optional runtime validation against zod/valibot/etc.) and exposes a small
+React mount helper:
+
+```typescript
+import { mountById } from "django-byo-react/react";
+import { z } from "zod";
+
+const AppPropsSchema = z.object({ showActive: z.boolean() });
+
+mountById("react-app-id", App, { validate: AppPropsSchema.parse });
+```
+
+See [`js/README.md`](./js/README.md) for the full API.
+
 ### Example using component name
 
 There is an optional `component_name` argument in the django `byo_react` template tag. This is intended for adding the react app root component name directly to the div data attribute so it can be used from the frontend. With the component name we can embed the same react app several times. This might be useful for a react app that needs to be used in several different elements on the same page such as form fields. Here's an example of how we might do that.
