@@ -8,8 +8,8 @@ This document provides comprehensive guidance for AI assistants working with the
 
 - **Repository**: https://github.com/lukewiwa/django-byo-react
 - **License**: MIT
-- **Python Support**: 3.9+
-- **Django Support**: 4.2+
+- **Python Support**: 3.11+
+- **Django Support**: 5.2+
 - **Package Manager**: uv
 - **Current Version**: 1.0.0
 
@@ -118,18 +118,19 @@ make test
 uv run tox
 
 # Run specific environment
-uv run tox -e py311-django51
+uv run tox -e py314-django61
 
-# Run linting only
-uv run tox -e py39-lint
+# Run linting (ruff + pyright) only
+uv run tox -e lint
+
+# Quick run against the project venv
+uv run python -m django test --settings=tests.settings tests
 ```
 
-Test environments (tox.ini:4-9):
-- `py39-django42` - Python 3.9 + Django 4.2
-- `py310-django{42,50,51}` - Python 3.10 + Django 4.2/5.0/5.1
-- `py311-django{42,50,51}` - Python 3.11 + Django 4.2/5.0/5.1
-- `py312-django{42,50,51}` - Python 3.12 + Django 4.2/5.0/5.1
-- `py39-lint` - Code quality checks (ruff)
+Test environments (tox.ini), interpreters fetched on demand by tox-uv:
+- `py311-django52` - Python 3.11 + Django 5.2 (6.x needs 3.12+)
+- `py{312,313,314}-django{52,60,61}` - Python 3.12-3.14 + Django 5.2/6.0/6.1
+- `lint` - ruff format, ruff check, pyright
 
 ### Code Quality
 
@@ -156,8 +157,8 @@ uv run pyright
 ```
 
 Configuration:
-- Ruff: Follows Black's formatting style (max line length: 88)
-- Pyright: Basic type checking mode (pyproject.toml:29-30)
+- Ruff: default formatter (line length 88), plus isort/pyupgrade/bugbear lint rules
+- Pyright: Basic type checking mode
 
 ### Building and Deployment
 
@@ -176,9 +177,8 @@ uvx twine upload dist/*
 ### CI/CD Workflows
 
 **Test Workflow** (.github/workflows/test.yml):
-- Runs on every push
-- Uses custom Docker container with multiple Python versions
-- Installs sqlite3 dependency
+- Runs on every push and pull request
+- Plain `ubuntu-latest` + `astral-sh/setup-uv`; tox-uv downloads the Pythons
 - Runs `make test` (tox)
 
 **Release Workflow** (.github/workflows/release.yml):
@@ -204,10 +204,10 @@ When modifying code:
 
 When writing tests (tests/test_django_byo_react.py):
 
-1. Use Django's `TestCase` class
-2. Test template rendering with `render_template` helper
-3. Mock UUIDs for deterministic testing (see examples in test file)
-4. Use `assertInHTML` for HTML comparison (ignores whitespace)
+1. Use `SimpleTestCase` (no database is configured or needed)
+2. Render via the `render(tag_args, context)` helper
+3. UUIDs are patched at class level for deterministic ids
+4. Use `assertInHTML` / `assertHTMLEqual` for HTML comparison (ignores whitespace)
 5. Test all parameter combinations (id, component_name, className, props)
 6. Test different prop types (bool, string, dict)
 
@@ -238,7 +238,7 @@ The project intentionally avoids:
 5. Update README.md with usage example
 
 **Updating Django/Python support:**
-1. Update `requires-python` in pyproject.toml
+1. Update `requires-python` and classifiers in pyproject.toml
 2. Update tox.ini environment list
 3. Test locally with `make test`
 4. Update README if needed
@@ -254,7 +254,6 @@ The project intentionally avoids:
 
 **Branch naming:**
 - Feature branches should follow: `claude/feature-description-{session_id}`
-- Current branch: `claude/add-claude-documentation-Fk8A8`
 
 **Commit messages:**
 - Use clear, descriptive messages
@@ -264,13 +263,13 @@ The project intentionally avoids:
 
 **Pushing:**
 ```bash
-git push -u origin claude/add-claude-documentation-Fk8A8
+git push -u origin <branch-name>
 ```
 
 ### Files to Never Modify
 
 - `LICENSE` - Legal document, requires owner approval
-- `uv.lock` - Auto-generated, managed by uv
+- `uv.lock` - Auto-generated; only change it via `uv lock` / `uv sync`
 - `.git/` - Git internals
 - `__pycache__/` - Python cache
 - `dist/` - Build artifacts
@@ -302,7 +301,7 @@ The package is distributed via PyPI:
 ## Development Container
 
 A devcontainer is provided for VS Code:
-- Based on Python 3 image
+- Based on the devcontainers Python 3.14 image, with uv
 - Configured for Django development
 - Includes extensions: Pylance, Ruff, GitLens, Django support
 - Format on save enabled
@@ -323,7 +322,7 @@ A devcontainer is provided for VS Code:
 - Verify app in INSTALLED_APPS (tests/settings.py)
 
 **Type checking errors:**
-- Install django-types: `uv add --dev django-types`
+- django-types is already in the dev group: `uv sync`
 - Check pyproject.toml for pyright configuration
 - Use `# type: ignore` sparingly and with comments
 

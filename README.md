@@ -2,6 +2,14 @@
 
 A minimal template tag which creates a div element for React to bind to and a Django `json_script` which can be used to pass values from Django into the root React element as props. This library remains unopinionated about the React code by design since there are so many ways to create and maintain React apps.
 
+## Installation
+
+Requires Python 3.11+ and Django 5.2+.
+
+```bash
+pip install django-byo-react
+```
+
 ## Usage
 
 Install the app in `settings.py`
@@ -9,7 +17,7 @@ Install the app in `settings.py`
 ```python
 INSTALLED_APPS = [
     "django_byo_react",
-    ...
+    ...,
 ]
 ```
 
@@ -83,7 +91,7 @@ This will render with the following HTML:
 
 ```html
 <script id="<script-random-uuid>" type="application/json">{"showActive": true}</script>
-<div id="<div-random-uuid>" data-script-id="<script-random-uuid>" data-component-name="App" class="w-100"></div>
+<div id="<div-random-uuid>" data-component-name="App" data-script-id="<script-random-uuid>" class="w-100"></div>
 ```
 
 ##### Javascript/Typescript
@@ -96,7 +104,7 @@ import ReactDOM from "react-dom/client";
 const App: FC = (props) => <div {...props}></div>
 
 // Get all elements with data attribute `component-name` as "App"
-document.querySelectorAll("[data-component-name='App']")).forEach(container => {
+document.querySelectorAll("[data-component-name='App']").forEach(container => {
     // Extract props from the django json_script tag
     const jsonContent = document.getElementById(container.dataset?.scriptId)?.textContent;
     if (!jsonContent) throw new Error("No associated script found");

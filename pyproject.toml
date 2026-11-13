@@ -4,15 +4,23 @@ version = "1.0.0"
 description = "A template tag to create a div and json script tag for react to bind to"
 authors = [{ name = "lukewiwa", email = "luke.wiwa@gmail.com" }]
 readme = "README.md"
-license = { file = "LICENSE" }
+license = "MIT"
+license-files = ["LICENSE"]
 classifiers = [
-  "License :: OSI Approved :: MIT License",
   "Operating System :: OS Independent",
   "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
   "Framework :: Django",
+  "Framework :: Django :: 5.2",
+  "Framework :: Django :: 6.0",
+  "Framework :: Django :: 6.1",
 ]
-requires-python = ">=3.9"
-dependencies = ["django>=4.2"]
+requires-python = ">=3.11"
+dependencies = ["django>=5.2"]
 
 [project.urls]
 Homepage = "https://github.com/lukewiwa/django-byo-react"
@@ -20,20 +28,24 @@ Repository = "https://github.com/lukewiwa/django-byo-react"
 Issues = "https://github.com/lukewiwa/django-byo-react/issues"
 
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling>=1.27"]
 build-backend = "hatchling.build"
 
-[tool.hatchling.build.targets.wheel]
+[tool.hatch.build.targets.wheel]
 packages = ["django_byo_react"]
+
+[dependency-groups]
+dev = [
+  "django-types>=0.24.0",
+  "pyright>=1.1.414",
+  "ruff>=0.17.5",
+  "tox>=4.67.13",
+  "tox-uv>=1.37.7",
+]
+
+[tool.ruff.lint]
+extend-select = ["I", "UP", "B"]
 
 [tool.pyright]
 typeCheckingMode = "basic"
-
-[tool.uv]
-dev-dependencies = [
-  "tox>=4.18.0",
-  "ruff>=0.6.1",
-  "pyright>=1.1.377",
-  "django-types>=0.19.1",
-  "tox-uv>=1.11.2",
-]
+include = ["django_byo_react", "tests"]

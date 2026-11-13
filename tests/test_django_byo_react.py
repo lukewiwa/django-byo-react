@@ -1,68 +1,71 @@
 from unittest.mock import patch
+
 from django.template import Context, Template
-from django.test import TestCase
+from django.test import SimpleTestCase
 
-from django_byo_react.templatetags.byo_react import uuid
+TAG_UUID4 = "django_byo_react.templatetags.byo_react.uuid.uuid4"
 
 
-class ByoReactTestCase(TestCase):
-    test_id = "test-id"
+@patch(TAG_UUID4, side_effect=["div-uuid", "script-uuid"])
+class ByoReactTests(SimpleTestCase):
+    def render(self, tag_args="", context=None):
+        template = Template("{% load byo_react %}{% byo_react " + tag_args + " %}")
+        return template.render(Context(context or {}))
 
-    def render_template(self, string, context=None):
-        context = context or {}
-        context = Context(context)
-        return Template(string).render(context)
-
-    @patch.object(uuid, "uuid4", side_effect=["one", "two"])
-    def test_json_script_renders(self, mock_uuid):
-        rendered = self.render_template(
-            """{% load byo_react %}
-            {% byo_react %}"""
+    def test_defaults(self, _uuid4):
+        rendered = self.render()
+        self.assertHTMLEqual(
+            rendered,
+            '<script id="script-uuid" type="application/json">{}</script>'
+            '<div id="div-uuid" data-script-id="script-uuid"></div>',
         )
+
+    def test_explicit_id_skips_uuid(self, uuid4):
+        rendered = self.render('id="react-app"')
         self.assertInHTML(
-            '<script id="two" type="application/json">{}</script>', rendered
+            '<div id="react-app" data-script-id="div-uuid"></div>', rendered
         )
+        self.assertEqual(uuid4.call_count, 1)
 
-    def test_json_script_passes_true_false(self):
-        rendered = self.render_template(
-            """{% load byo_react %}
-            {% byo_react id=test_id true=True false=False %}""",
-            context={"test_id": self.test_id},
-        )
-        self.assertInHTML('{"true": true, "false": false}', rendered)
-
-    def test_json_script_passes_string(self):
-        rendered = self.render_template(
-            """{% load byo_react %}
-            {% byo_react id=test_id string='string' %}""",
-            context={"test_id": self.test_id},
-        )
-        self.assertInHTML('{"string": "string"}', rendered)
-
-    def test_json_script_passes_dict(self):
-        rendered = self.render_template(
-            """{% load byo_react %}
-            {% byo_react id=test_id testDict=test_dict %}""",
-            context={"test_id": self.test_id, "test_dict": {"test": "test"}},
-        )
-        self.assertInHTML('{"testDict": {"test": "test"}}', rendered)
-
-    @patch.object(uuid, "uuid4", side_effect=["one", "two"])
-    def test_classname_renders(self, mock_uuid):
-        rendered = self.render_template(
-            """{% load byo_react %}
-            {% byo_react className='w-100 h-100' %}""",
-        )
+    def test_component_name(self, _uuid4):
+        rendered = self.render('component_name="App"')
         self.assertInHTML(
-            '<div id="one" data-script-id="two" class="w-100 h-100"></div>', rendered
+            '<div id="div-uuid" data-component-name="App"'
+            ' data-script-id="script-uuid"></div>',
+            rendered,
         )
 
-    @patch.object(uuid, "uuid4", side_effect=["one", "two"])
-    def test_uuid_id(self, mock_uuid):
-        rendered = self.render_template(
-            """{% load byo_react %}
-            {% byo_react %}"""
-        )
+    def test_class_name_is_stripped(self, _uuid4):
+        rendered = self.render('className="  w-100 h-100 "')
         self.assertInHTML(
-            '<div id="one" data-script-id="two"></div>', rendered, msg_prefix=rendered
+            '<div id="div-uuid" data-script-id="script-uuid" class="w-100 h-100">'
+            "</div>",
+            rendered,
         )
+
+    def test_blank_class_name_omits_attribute(self, _uuid4):
+        rendered = self.render('className="   "')
+        self.assertInHTML(
+            '<div id="div-uuid" data-script-id="script-uuid"></div>', rendered
+        )
+
+    def test_props(self, _uuid4):
+        cases = [
+            ("flag=True off=False", {}, '{"flag": true, "off": false}'),
+            ("text='hello'", {}, '{"text": "hello"}'),
+            ("count=3", {}, '{"count": 3}'),
+            ("nothing=None", {}, '{"nothing": null}'),
+            ("data=data", {"data": {"a": [1, 2]}}, '{"data": {"a": [1, 2]}}'),
+        ]
+        for tag_args, context, expected in cases:
+            with self.subTest(tag_args), patch(TAG_UUID4, side_effect=["d", "s"]):
+                rendered = self.render(tag_args, context)
+                self.assertInHTML(
+                    f'<script id="s" type="application/json">{expected}</script>',
+                    rendered,
+                )
+
+    def test_props_are_escaped(self, _uuid4):
+        rendered = self.render("evil=evil", {"evil": "</script><b>"})
+        self.assertNotIn("</script><b>", rendered)
+        self.assertIn("\\u003C/script\\u003E\\u003Cb\\u003E", rendered)

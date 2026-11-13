@@ -8,7 +8,6 @@
 		"--env-file=.env"
 	],
 	"containerEnv": {
-		"MYPY_CACHE": "/tmp/.mypy_cache",
 		"RUFF_CACHE_DIR": "/tmp/.ruff_cache"
 	},
 	// Set *default* container specific settings.json values on container create.
@@ -16,11 +15,10 @@
 		"vscode": {
 			"settings": {
 				"python.defaultInterpreterPath": ".venv/bin/python",
-				"python.linting.enabled": true,
 				"editor.formatOnSave": true,
 				"python.analysis.typeCheckingMode": "basic",
-				"python.formatting.provider": "ruff",
 				"[python]": {
+					"editor.defaultFormatter": "charliermarsh.ruff",
 					"editor.formatOnSave": true,
 					"editor.codeActionsOnSave": {
 						"source.fixAll": "explicit",
@@ -33,12 +31,10 @@
 			},
 			"extensions": [
 				"ms-python.vscode-pylance",
-				"visualstudioexptteam.vscodeintellicode",
 				"tamasfe.even-better-toml",
 				"redhat.vscode-yaml",
 				"eamodio.gitlens",
 				"streetsidesoftware.code-spell-checker",
-				"ms-python.black-formatter",
 				"batisteo.vscode-django",
 				"charliermarsh.ruff"
 			]
