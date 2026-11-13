@@ -8,8 +8,8 @@ This document provides comprehensive guidance for AI assistants working with the
 
 - **Repository**: https://github.com/lukewiwa/django-byo-react
 - **License**: MIT
-- **Python Support**: 3.9+
-- **Django Support**: 4.2+
+- **Python Support**: 3.11+
+- **Django Support**: 5.2+
 - **Package Manager**: uv
 - **Current Version**: 1.0.0
 
@@ -118,18 +118,20 @@ make test
 uv run tox
 
 # Run specific environment
-uv run tox -e py311-django51
+uv run tox -e py313-django61
 
 # Run linting only
-uv run tox -e py39-lint
+uv run tox -e lint
 ```
 
-Test environments (tox.ini:4-9):
-- `py39-django42` - Python 3.9 + Django 4.2
-- `py310-django{42,50,51}` - Python 3.10 + Django 4.2/5.0/5.1
-- `py311-django{42,50,51}` - Python 3.11 + Django 4.2/5.0/5.1
-- `py312-django{42,50,51}` - Python 3.12 + Django 4.2/5.0/5.1
-- `py39-lint` - Code quality checks (ruff)
+Test environments (tox.ini), tracking Django's supported Python versions:
+- `py311-django52` - Python 3.11 + Django 5.2 LTS
+- `py{312,313,314}-django{52,60,61}` - Python 3.12-3.14 + Django 5.2/6.0/6.1
+- `lint` - Code quality checks (ruff)
+
+tox runs via `tox-uv`, which provisions missing Python versions automatically.
+When a Django or Python version goes EOL, drop it from tox.ini, the
+`requires-python`/`dependencies` floors and the classifiers in pyproject.toml.
 
 ### Code Quality
 
@@ -177,8 +179,7 @@ uvx twine upload dist/*
 
 **Test Workflow** (.github/workflows/test.yml):
 - Runs on every push
-- Uses custom Docker container with multiple Python versions
-- Installs sqlite3 dependency
+- Installs uv and every supported Python with `uv python install`
 - Runs `make test` (tox)
 
 **Release Workflow** (.github/workflows/release.yml):
@@ -204,12 +205,12 @@ When modifying code:
 
 When writing tests (tests/test_django_byo_react.py):
 
-1. Use Django's `TestCase` class
-2. Test template rendering with `render_template` helper
+1. Use Django's `SimpleTestCase` (no database involved)
+2. Test template rendering with the module-level `render` helper
 3. Mock UUIDs for deterministic testing (see examples in test file)
 4. Use `assertInHTML` for HTML comparison (ignores whitespace)
 5. Test all parameter combinations (id, component_name, className, props)
-6. Test different prop types (bool, string, dict)
+6. Test different prop types (bool, None, string, numbers, dict, list) and escaping
 
 ### Adding Features
 
@@ -254,7 +255,6 @@ The project intentionally avoids:
 
 **Branch naming:**
 - Feature branches should follow: `claude/feature-description-{session_id}`
-- Current branch: `claude/add-claude-documentation-Fk8A8`
 
 **Commit messages:**
 - Use clear, descriptive messages
@@ -264,7 +264,7 @@ The project intentionally avoids:
 
 **Pushing:**
 ```bash
-git push -u origin claude/add-claude-documentation-Fk8A8
+git push -u origin <branch-name>
 ```
 
 ### Files to Never Modify
@@ -302,7 +302,7 @@ The package is distributed via PyPI:
 ## Development Container
 
 A devcontainer is provided for VS Code:
-- Based on Python 3 image
+- Based on the `python:3.13` image, with 3.11/3.12/3.14 installed via uv
 - Configured for Django development
 - Includes extensions: Pylance, Ruff, GitLens, Django support
 - Format on save enabled

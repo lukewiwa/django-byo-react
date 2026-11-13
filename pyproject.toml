@@ -9,10 +9,18 @@ classifiers = [
   "License :: OSI Approved :: MIT License",
   "Operating System :: OS Independent",
   "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
   "Framework :: Django",
+  "Framework :: Django :: 5.2",
+  "Framework :: Django :: 6.0",
+  "Framework :: Django :: 6.1",
 ]
-requires-python = ">=3.9"
-dependencies = ["django>=4.2"]
+requires-python = ">=3.11"
+dependencies = ["django>=5.2"]
 
 [project.urls]
 Homepage = "https://github.com/lukewiwa/django-byo-react"
@@ -29,11 +37,11 @@ packages = ["django_byo_react"]
 [tool.pyright]
 typeCheckingMode = "basic"
 
-[tool.uv]
-dev-dependencies = [
-  "tox>=4.18.0",
-  "ruff>=0.6.1",
-  "pyright>=1.1.377",
-  "django-types>=0.19.1",
-  "tox-uv>=1.11.2",
+[dependency-groups]
+dev = [
+  "tox>=4.30",
+  "tox-uv>=1.28",
+  "ruff>=0.14",
+  "pyright>=1.1.400",
+  "django-types>=0.22",
 ]

@@ -2,15 +2,17 @@
 
 A minimal template tag which creates a div element for React to bind to and a Django `json_script` which can be used to pass values from Django into the root React element as props. This library remains unopinionated about the React code by design since there are so many ways to create and maintain React apps.
 
+## Requirements
+
+- Python 3.11+
+- Django 5.2+
+
 ## Usage
 
 Install the app in `settings.py`
 
 ```python
-INSTALLED_APPS = [
-    "django_byo_react",
-    ...
-]
+INSTALLED_APPS = ["django_byo_react", ...]
 ```
 
 In the template that you want to install a react app load the tag and use it with the given `kwargs`. You can add extra props to the root react component by adding `kwargs` to the tag element. As long as is json serializable it can be included in the props. This library will give the json script a random uuid and add that as a data attribute `data-script-id` to the react app div. This can be used to access the data using javascript.
