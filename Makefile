@@ -1,6 +1,6 @@
 .PHONY: test
 test:
-	uv run tox
+	uv run tox run-parallel --parallel-no-spinner
 
 .PHONY: build
 build:

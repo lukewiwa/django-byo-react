@@ -38,7 +38,6 @@
 				"redhat.vscode-yaml",
 				"eamodio.gitlens",
 				"streetsidesoftware.code-spell-checker",
-				"ms-python.black-formatter",
 				"batisteo.vscode-django",
 				"charliermarsh.ruff"
 			]
