@@ -8,10 +8,10 @@ This document provides comprehensive guidance for AI assistants working with the
 
 - **Repository**: https://github.com/lukewiwa/django-byo-react
 - **License**: MIT
-- **Python Support**: 3.9+
-- **Django Support**: 4.2+
+- **Python Support**: 3.11–3.15
+- **Django Support**: 5.2 LTS, 6.0, 6.1
 - **Package Manager**: uv
-- **Current Version**: 1.0.0
+- **Current Version**: 2.0.0
 
 ## Philosophy
 
@@ -118,18 +118,27 @@ make test
 uv run tox
 
 # Run specific environment
-uv run tox -e py311-django51
+uv run tox -e py314-django61
 
-# Run linting only
-uv run tox -e py39-lint
+# Run linting only (ruff + pyright)
+uv run tox -e lint
+
+# Quick run against the project venv
+uv run ./manage.py test tests
 ```
 
-Test environments (tox.ini:4-9):
-- `py39-django42` - Python 3.9 + Django 4.2
-- `py310-django{42,50,51}` - Python 3.10 + Django 4.2/5.0/5.1
-- `py311-django{42,50,51}` - Python 3.11 + Django 4.2/5.0/5.1
-- `py312-django{42,50,51}` - Python 3.12 + Django 4.2/5.0/5.1
-- `py39-lint` - Code quality checks (ruff)
+Test environments (tox.ini), following the official Django/Python support matrix:
+- `py311-django52` - Python 3.11 + Django 5.2
+- `py{312,313,314}-django{52,60,61}` - Python 3.12–3.14 + Django 5.2/6.0/6.1
+- `py315-django61` - Python 3.15 + Django 6.1
+- `lint` - Code quality checks (ruff format, ruff check, pyright)
+
+Tests run with `PYTHONDEVMODE=1` and deprecation warnings promoted to errors, so
+upcoming Django deprecations fail CI early. tox-uv downloads any missing Python
+interpreters automatically.
+
+When a Django or Python version reaches end of life, drop it from `tox.ini`,
+`requires-python`/`dependencies`/classifiers in `pyproject.toml`, and README.
 
 ### Code Quality
 
@@ -157,7 +166,7 @@ uv run pyright
 
 Configuration:
 - Ruff: Follows Black's formatting style (max line length: 88)
-- Pyright: Basic type checking mode (pyproject.toml:29-30)
+- Pyright: Basic type checking mode (`[tool.pyright]` in pyproject.toml)
 
 ### Building and Deployment
 
@@ -177,9 +186,8 @@ uvx twine upload dist/*
 
 **Test Workflow** (.github/workflows/test.yml):
 - Runs on every push
-- Uses custom Docker container with multiple Python versions
-- Installs sqlite3 dependency
-- Runs `make test` (tox)
+- Installs uv via `astral-sh/setup-uv`
+- Runs `make test` (tox in parallel; tox-uv fetches each Python version)
 
 **Release Workflow** (.github/workflows/release.yml):
 - Triggers on GitHub releases or manual dispatch
@@ -204,12 +212,13 @@ When modifying code:
 
 When writing tests (tests/test_django_byo_react.py):
 
-1. Use Django's `TestCase` class
-2. Test template rendering with `render_template` helper
-3. Mock UUIDs for deterministic testing (see examples in test file)
-4. Use `assertInHTML` for HTML comparison (ignores whitespace)
+1. Use Django's `SimpleTestCase` (no database is needed)
+2. Test template rendering with the `render_template` helper
+3. Mock UUIDs for deterministic exact-output tests (`assertHTMLEqual`)
+4. Use `render_one`/`render_props` to parse output and assert on attributes and
+   decoded JSON props rather than matching raw JSON strings
 5. Test all parameter combinations (id, component_name, className, props)
-6. Test different prop types (bool, string, dict)
+6. Cover escaping of attributes and `json_script` content
 
 ### Adding Features
 
@@ -253,19 +262,13 @@ The project intentionally avoids:
 ### Git Workflow
 
 **Branch naming:**
-- Feature branches should follow: `claude/feature-description-{session_id}`
-- Current branch: `claude/add-claude-documentation-Fk8A8`
+- Use short descriptive feature branch names, e.g. `update-supported-versions`
 
 **Commit messages:**
 - Use clear, descriptive messages
 - Focus on "why" not "what"
 - Follow existing style (see `git log`)
-- Include session URL in commits
-
-**Pushing:**
-```bash
-git push -u origin claude/add-claude-documentation-Fk8A8
-```
+- Do not add Claude co-author trailers, session URLs or other AI attribution
 
 ### Files to Never Modify
 
@@ -302,7 +305,7 @@ The package is distributed via PyPI:
 ## Development Container
 
 A devcontainer is provided for VS Code:
-- Based on Python 3 image
+- Based on the devcontainers Python 3.14 image with uv
 - Configured for Django development
 - Includes extensions: Pylance, Ruff, GitLens, Django support
 - Format on save enabled

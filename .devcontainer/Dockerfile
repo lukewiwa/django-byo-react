@@ -1,9 +1,4 @@
-FROM lukewiwa/pythons:36-37-38-39-310-311-312
+FROM mcr.microsoft.com/devcontainers/python:3.14
 
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
-COPY --from=ghcr.io/astral-sh/uv:latest /uvx /bin/uvx
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
-RUN ln -sf /usr/local/bin/python3.9 /usr/local/bin/python
-RUN ln -sf /usr/local/bin/pip3.9 /usr/local/bin/pip
-
-RUN apt update && apt install -y sqlite3 ssh-client

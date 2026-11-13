@@ -4,22 +4,17 @@ on:
   workflow_call:
   push:
 
+permissions:
+  contents: read
+
 jobs:
   test:
     runs-on: ubuntu-latest
-    container:
-      image: lukewiwa/pythons:36-37-38-39-310-311-312
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - name: install sqlite3
-        run: apt-get update && apt-get install --no-install-recommends -y sqlite3
-
-      - name: default python install
-        run: ln -sf /usr/local/bin/python3.9 /usr/local/bin/python && ln -sf /usr/local/bin/pip3.9 /usr/local/bin/pip
-
-      - name: install uv
-        uses: astral-sh/setup-uv@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10
 
       - name: Run tests
         run: make test
